@@ -29,14 +29,14 @@ client = ComputeInstanceClient()
 
 # ## get
 # # python ./computeInstanceClient.py --operation get --subscription-id $subscription_id --resource-group-name $resource_group_name --workspace-name $amlws_name --compute-instance-name $amlws_name-$computeinstance_name
-# client.get(subscription_id=settings['subscription_id'], resource_group_name=workspaceName, \
-#     workspace_name=workspaceName, compute_instance_name=workspaceName+"-"+settings['computeinstance_name'])
+# print(client.get(subscription_id=settings['subscription_id'], resource_group_name=workspaceName, \
+#     workspace_name=workspaceName, compute_instance_name=workspaceName+"-"+settings['computeinstance_name']))
 
 
 # ## get_status
 # # python ./computeInstanceClient.py --operation get_status --subscription-id $subscription_id --resource-group-name $resource_group_name --workspace-name $amlws_name --compute-instance-name $amlws_name-$computeinstance_name
-# client.get_status(subscription_id=settings['subscription_id'], resource_group_name=workspaceName, \
-#     workspace_name=workspaceName, compute_instance_name=workspaceName+"-"+settings['computeinstance_name'])
+# print(client.get_status(subscription_id=settings['subscription_id'], resource_group_name=workspaceName, \
+#     workspace_name=workspaceName, compute_instance_name=workspaceName+"-"+settings['computeinstance_name']))
 
 # ## stop
 # # python ./computeInstanceClient.py --operation stop --subscription-id $subscription_id --resource-group-name $resource_group_name --workspace-name $amlws_name --compute-instance-name $amlws_name-$computeinstance_name
@@ -55,8 +55,8 @@ client = ComputeInstanceClient()
 #     workspace_name=workspaceName, compute_instance_name=workspaceName+"-"+settings['computeinstance_name'])
 
 ## report
-client.report(subscription_id=settings['subscription_id'], resource_group_name=workspaceName, \
-    workspace_name=workspaceName, compute_instance_name=workspaceName+"-"+settings['computeinstance_name'])
+print(client.report(subscription_id=settings['subscription_id'], resource_group_name=workspaceName, \
+    workspace_name=workspaceName, compute_instance_name=workspaceName+"-"+settings['computeinstance_name']))
 
 
 
