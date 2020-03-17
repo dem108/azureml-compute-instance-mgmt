@@ -1,8 +1,8 @@
 from azureml.core import Workspace
 from azureml.core.authentication import MsiAuthentication
 from azureml.core.compute.computeinstance import ComputeInstance, ComputeInstanceProvisioningConfiguration
-msi_auth = MsiAuthentication()
 
+msi_auth = MsiAuthentication()
 
 class ComputeInstanceClient():
     def __init__(self):
@@ -20,17 +20,29 @@ class ComputeInstanceClient():
         ws = Workspace(subscription_id=subscription_id, resource_group=resource_group_name, workspace_name=workspace_name, auth=msi_auth)
         return ComputeInstance(ws, name=compute_instance_name)
 
-    def stop(self, subscription_id, resource_group_name, workspace_name, compute_instance_name):
-        ws = Workspace(subscription_id=subscription_id, resource_group=resource_group_name, workspace_name=workspace_name, auth=msi_auth)
-        ComputeInstance(ws, name=compute_instance_name).stop()
-
     def get_status(self, subscription_id, resource_group_name, workspace_name, compute_instance_name):
         ws = Workspace(subscription_id=subscription_id, resource_group=resource_group_name, workspace_name=workspace_name, auth=msi_auth)
         return ComputeInstance(ws, name=compute_instance_name).get_status()
+        
+    def report(self, subscription_id, resource_group_name, workspace_name, compute_instance_name, summary=False):
+        ws = Workspace(subscription_id=subscription_id, resource_group=resource_group_name, workspace_name=workspace_name, auth=msi_auth)
+        ci = ComputeInstance(ws, name=compute_instance_name).get()
+        if summary==False:
+            return ci
+        else:
+            properties = ci['properties']['properties']
+            id_split = ci['id'].split('/')
+            resource_group_name = id_split[4]
+            workspace_name = id_split[8]
+            return "rg_name: {}, ws_name: {}. ci_name: {}, state: {}, vm_size: {}, ssh_admin_user_name: {}, ssh_public_access: {}, public_ip_address: {}, error: {}".format(resource_group_name, workspace_name, ci['name'], properties['state'], properties['vmSize'], properties['sshSettings']['adminUserName'], properties['sshSettings']['sshPublicAccess'], properties['connectivityEndpoints']['publicIpAddress'], properties['errors'])
 
     def start(self, subscription_id, resource_group_name, workspace_name, compute_instance_name):
         ws = Workspace(subscription_id=subscription_id, resource_group=resource_group_name, workspace_name=workspace_name, auth=msi_auth)
         ComputeInstance(ws, name=compute_instance_name).start()
+
+    def stop(self, subscription_id, resource_group_name, workspace_name, compute_instance_name):
+        ws = Workspace(subscription_id=subscription_id, resource_group=resource_group_name, workspace_name=workspace_name, auth=msi_auth)
+        ComputeInstance(ws, name=compute_instance_name).stop()
 
     def delete(self, subscription_id, resource_group_name, workspace_name, compute_instance_name):
         ws = Workspace(subscription_id=subscription_id, resource_group=resource_group_name, workspace_name=workspace_name, auth=msi_auth)
@@ -42,9 +54,10 @@ if __name__=='__main__':
     supported_operations = [
         "create",
         "get",
-        "stop",
         "get_status",
+        "report",
         "start",
+        "stop",
         "delete"
     ]
 
@@ -62,8 +75,8 @@ if __name__=='__main__':
 
     if args.operation is None:
         print("You must specify operation. Suppored operations are: {}".format(supported_operations))
-        print("example: python ./this.py --operation get_status --subscription-id \"1234567890\" --resource-group-name rgname1 --workspace-name wsname1 --compute-instance_name ci1 ")
-        print("example: python ./this.py --operation create --subscription-id \"1234567890\" --resource-group-name rgname1 --workspace-name wsname1 --compute-instance_name ci1 --vm-size STANDARD_D2_v2 --ssh-public_access True --admin-user-ssh-public-key \"abcdefg\"")
+        print("example: python ./this.py --operation get_status --subscription-id \"1234567890\" --resource-group-name rgname1 --workspace-name wsname1 --compute-instance-name ci1 ")
+        print("example: python ./this.py --operation create --subscription-id \"1234567890\" --resource-group-name rgname1 --workspace-name wsname1 --compute-instance-name ci1 --vm-size STANDARD_D2_v2 --ssh-public-access True --admin-user-ssh-public-key \"abcdefg\"")
         print("example: python ./this.py --help")
         exit(1)
 
@@ -78,6 +91,7 @@ if __name__=='__main__':
 
     client = ComputeInstanceClient()
     if operation=="create":
+        ssh_flag = False
         if ssh_public_access.lower()=="true":
             ssh_flag = True
         client.create(subscription_id, resource_group_name, workspace_name, compute_instance_name, vm_size, ssh_flag, admin_user_ssh_public_key)
@@ -87,6 +101,8 @@ if __name__=='__main__':
         client.stop(subscription_id, resource_group_name, workspace_name, compute_instance_name)
     elif operation=="get_status":
         print(client.get_status(subscription_id, resource_group_name, workspace_name, compute_instance_name))
+    elif operation=="report":
+        print(client.report(subscription_id, resource_group_name, workspace_name, compute_instance_name))
     elif operation=="start":
         client.start(subscription_id, resource_group_name, workspace_name, compute_instance_name)
     elif operation=="delete":
@@ -95,4 +111,5 @@ if __name__=='__main__':
         print("Unaccepeted operation: {}".format(operation))
         print("Suppored operations are: {}".format(supported_operations))
         print("Try with --help")
-
+    
+    
