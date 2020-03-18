@@ -6,7 +6,7 @@ Sample Python and bash scripts with ARM template to help automating creation and
 
 ```bash
 git clone https://github.com/dem108/azureml-compute-instance-mgmt
-cd code/common
+cd code/setting
 cp config.json.dist config.json
 vi config.json
 ```

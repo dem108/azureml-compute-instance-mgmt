@@ -5,7 +5,7 @@ import json
 import pathlib
 script_path = pathlib.Path(__file__).parent.absolute()
 settings = None
-with open('{}/common/config.json'.format(script_path)) as config_json:
+with open('{}/setting/config.json'.format(script_path)) as config_json:
     settings = json.load(config_json)
     print(settings['workspace_names'], settings['vm_size'])
 
