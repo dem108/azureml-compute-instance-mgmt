@@ -12,7 +12,7 @@ with open('{}/common/config.json'.format(script_path)) as config_json:
     # print(settings['workspace_names'], settings['vm_size'])
 
 ## Override some parameters for individual testing
-workspaceName = "amlws004"
+workspaceName = "amlws006"
 computeinstance_name = "amlci000"
 
 from helper.compute_instance_client import ComputeInstanceClient
