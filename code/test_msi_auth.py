@@ -12,12 +12,14 @@ with open('{}/common/config.json'.format(script_path)) as config_json:
     # print(settings['workspace_names'], settings['vm_size'])
 
 ## Override some parameters for individual testing
-workspaceName = "amlws004"
+workspaceName = "amlws006"
 computeinstance_name = "amlci000"
 
 msi_auth = MsiAuthentication()
 
 ws = Workspace(subscription_id=settings['subscription_id'], resource_group=workspaceName, workspace_name=workspaceName, auth=msi_auth)
+print(ws)
+
 name = workspaceName + "-" + computeinstance_name
 # ci = ComputeInstance(ws, name=name).get()
 
